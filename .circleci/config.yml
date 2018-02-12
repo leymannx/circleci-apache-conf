@@ -26,7 +26,12 @@ jobs:
             sudo cp ~/circleci-resolve-host/.circleci/example.conf /etc/apache2/sites-available/example.conf
             sudo a2ensite example
             sudo service apache2 start
-            sudo echo '127.0.0.1 example.localhost' >> /etc/hosts
+
+      - run:
+          name: Update host file
+          command: |
+            echo 127.0.0.1 example.localhost | sudo tee -a /etc/hosts
+            cat /etc/hosts
 
       - run:
           name: Run tests
