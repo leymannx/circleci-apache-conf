@@ -1,0 +1,32 @@
+version: 2
+
+jobs:
+  build:
+    branches:
+      only:
+        - master
+    docker:
+      - image: circleci/php:7.1-apache-jessie-node-browsers
+
+    working_directory: ~/circleci-resolve-host
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install some basic tools
+          command: |
+            sudo apt-get update -y
+            sudo apt-get upgrade -y
+            sudo apt-get install -y nano
+
+      - run:
+          name: Configure & start Apache
+          command: |
+            sudo cp ~/circleci-resolve-host/.circleci/example.conf /etc/apache2/sites-available/example.conf
+            sudo a2ensite example
+            sudo service apache2 start
+      - run:
+          name: Run tests
+          command: |
+            curl example.localhost
